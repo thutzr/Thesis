@@ -1,0 +1,249 @@
+\chapter{本文重要定理及引理的证明}
+\label{cha:proof}
+
+\section{定理~\ref{theo:2:1}~的证明}\label{pr:2:1}
+\begin{proof}
+我们利用数学归纳法证明。
+\par
+对$k^\prime = 0$，显然$\|y-u(0)\|_2^2 \leq 1\cdot \|y-u(0)\|_2^2$.
+\par
+假设对于$k^\prime = 0,\cdots,k$，我们有$\|y-u(k^\prime)\|_2^2 \leq (1-n\lambda_0/2)^{k^\prime} \|y-u(0)\|_2^2$.
+\par
+对$k^\prime = k+1$，我们令
+\[
+A_{ir} = \{\exists w:\|w-w_r(0)\|\leq R, \mathbb{I}\{x_i^\top w_r(0)\geq 0\}\neq \mbi \{x_i^\top w\geq 0\}\}
+\]
+其中$R = \frac{c\lambda_0}{n^2}, c$是一个正常数。我们令$S_i = \{r\in [m]: \mbi\{A_{ir}=0\}\}, S_i^\bot  = [m]\backslash S_i\}$，则以下的引理给出了$S_i^\top$的和的大小的一个界。
+\begin{lemma}
+至少以概率$1-\delta$有，
+\[
+\sum_{i=1}^n |S_i^\top|\leq\frac{CmnR}{\delta}, C>0\makebox[3em]{为常数}
+\]
+\end{lemma}
+\par
+考虑
+\[
+\begin{aligned}
+u_i(k+1) - u_i(k) & = \frac{1}{\sqrt{m}}\sum_{r=1}^ma_r(\sigma(w_r(k+1)^\top x_i) - \sigma (w_r(k)^\top x_i))\\
+ & = \frac{1}{\sqrt{m}}\sum_{r=1}^ma_r(\sigma((w_r(k)-\eta\frac{\partial L(W(k))}{\partial w_r(k)})^\top x_i) - \sigma (w_r(k)^\top x_i))\\
+\end{aligned}
+\]
+\par
+我们利用$S_i$将上述等式的右边划分为两部分，
+\[
+I_1^i \triangleq \frac{1}{\sqrt{m}}\sum_{r\in S_i} a_r(\sigma((w_r(k)-\eta\frac{\partial L(W(k))}{\partial w_r(k)})^\top x_i) - \sigma (w_r(k)^\top x_i))
+\]
+\[
+I_2^i \triangleq \frac{1}{\sqrt{m}}\sum_{r\in S_i^\bot} a_r(\sigma((w_r(k)-\eta\frac{\partial L(W(k))}{\partial w_r(k)})^\top x_i) - \sigma (w_r(k)^\top x_i))
+\]
+\par
+因为ReLU为1-Lipschitz的，并且$|a_r| = 1$，我们有
+\[
+|I_2^i|\leq \frac{\eta}{\sqrt{m}} \sum_{r\in S_i^\bot }|\bigg(\frac{\partial L(W(k))}{\partial w_r(k)}\bigg)^\top x_i|\leq \frac{\eta|S_i^\bot|}{\sqrt{m}}\max_{r\in [m]}\|\frac{\partial L(W(k))}{\partial w_r(k)}\|_2\leq \frac{\eta|S_i^\bot|\sqrt{n}\|u(k)-y\|_2}{m} 
+\]
+\par
+由于对于$\forall r\in[m]$,$\|w_r(k)-w_r(0)\|\leq R^\prime$，且$R^\prime \le R$，我们有$\mbi\{w_r(k+1)^\top x_i\geq 0\} = \mbi\{w_r(k)^\top x_i \geq 0\}, \forall r \in S_i$，则
+\[
+\begin{aligned}
+I_1^i &= -\frac{\eta}{m}\sum_{j=1}^n x_i^\top x_j (u_j-y_j)\sum_{r\in S_i}\mbi\{w_r(k)^\top x_i\geq 0,w_r(k)^\top x_j \geq 0\}\\
+ & -\eta\sum_{j=1}^n (u_j-y_j)(H_{ij}(k) - H_{ij}^\bot(k))
+\end{aligned}
+\]
+其中$H_{ij}(k) = 1/m\sum_{r=1}^m x_i^\top x_j\mbi\{w_r(k)^\top x_i\geq 0, w_r(k)^\top x_j\geq 0\}, H_{ij}^\bot(k) = 1/m\sum_{r\in S_i^\bot} x_i^\top x_j\mbi\{w_r(k)^\top x_i\geq 0, w_r(k)^\top x_j\geq 0\}$。由上面的引理可以知道
+\[
+\|H*\bot(k)\|_2 \leq \sum_{(i,j)=(1,1)}^{(n,n)}|H_{ij}^\bot (k)\leq \frac{n\sum_{i=1}^n |S_i^\bot|}{m} \leq \frac{Cn^2 mR}{\delta m} \leq \frac{Cn^2R}{\delta}
+\]
+从而我们有
+\[
+\|u(k+1)-u(k)\|_2^2 \leq \eta^2\sum_{i=1}^n \frac{1}{m}\bigg(\sum_{r = 1}^m\|\frac{\partial L(W(k))}{\partial w_r(k)}\|_2 \bigg)^2\leq \eta^2 n^2\|y-u(k)\|_2^2
+\]
+进而通过引入交叉项有
+\[
+\begin{aligned}
+\|y-u(k+1)\|_2^2 & = \|y-u(k) -(u(k+1)-u(k))\|_2^2\\
+ & = \|y-u(k)\|_2^2 -2 (y-u(k))^\top (u(k+1)-u(k))+\|u(k+1)-u(k)\|_2^2\\
+ & = \|y-u(k)\|_2^2 -2 \eta(y-u(k))^\top H(k)(y-u(k))+2\eta(y-u(k))^\top H(k)^\top (y-u(k)) \\
+ & - 2(y-u(k))^\top I_2 + \|u(k+1)- u(k)\|_2^2\\
+ & \leq (1-\eta\lambda_0+ \frac{2C\eta n^2R}{\delta} + \frac{2C\eta n^{3/2}R}{\delta}+eta^2 n^2)\|y-u(k)\|_2^2\\
+ & \leq (1-\eta\lambda_0/2)\|y-u(k)\|_2^2
+\end{aligned}
+\]
+其中第三个等式成立是对$u(k+1)-u(k)$的分解。
+\par
+由以上的结果知，对$k^\prime = k+1$命题也成立，所以由归纳法知，定理成立。
+\end{proof}
+
+
+\section{定理~\ref{theo:1}~的证明}\label{pr:1}
+\begin{proof}
+令$z_i = x_i, \theta = \sum_{l=0}^{r-1}\mathrm{S}_l^s(w)$，其中
+\[
+	\mathrm{S}_l^s(w) = [\underbrace{0,\cdots,0}_{ls\makebox[1em]{个}0}, w_1,\cdots,w_m,0\cdots,0]\in \mathbb{R}^d
+\]
+则$F_1(x_i;w) = \langle z_i,\theta \rangle$，
+\par
+定义$\theta\in \mathbb{R}^d$的经验范数为
+\[
+\|\theta\|_x^2 = \frac{1}{n}\sum_{i=1}^n |\langle z_i, \theta\rangle|^2
+\]
+则由于$\hat{\theta} = \sum_{l=0}^{r-1}\mathrm{S}_l^s(\hat{w})$，有
+\[
+	\frac{1}{n}\sum_{i=1}^n (y_i - \langle z_i, \hat{\theta}\rangle)^2 \leq \frac{1}{n}\sum_{i=1}^n (y_i - \langle z_i, {\theta}\rangle)^2
+\]
+又$y_i = \langle z_i, {\theta}\rangle + \varepsilon_i$，上式可以整理成为
+\begin{equation}\label{eq:18}
+\|\hat{\theta}- \theta\|_x^2 \leq \frac{2}{n}\sum_{i=1}^n \varepsilon_i\langle z_i,\hat{\theta}-\theta\rangle
+\end{equation}
+\par
+设$\theta$参数的集合为$\Theta$，定义
+\[
+	\overline{\Theta_x} := \{\phi = \theta - \theta^\prime: \theta, \theta^\prime \in \Theta, \|\phi\|_x\leq 1\}
+\]
+\[
+	\mathbb{G}_x(\phi) = \frac{1}{n}\sum_{i=1}^n \varepsilon_i\langle z_i,\phi\rangle
+\]
+则有以下引理成立
+\begin{lemma}
+对于参数集$\Theta$，我们有
+\begin{equation}\label{eq:l4}
+\sup_{\hat{\theta}\in \Theta} \sum_{i=1}^n \varepsilon_i\langle z_i,\hat{\theta}-\theta\rangle \leq \|\hat{theta} - \theta \|_x \sup_{\phi \in \Theta_x} \sum_{i=1}^n \varepsilon_i\langle z_i,\phi\rangle
+\end{equation}
+
+\end{lemma}
+\begin{proof}
+为证结论成立，只需证对$\hat{\theta} \in \Theta$，有$v = (\hat{\theta} - \theta)\|\hat{\theta}-\theta\|_x \in \Theta_x$
+\par
+显然，$\|v\|_x \leq 1$，并且由$\theta$的定义知，$\hat{\theta}\|\hat{\theta}-\theta\|_x, \theta\|\hat{\theta}-\theta\|_x \in \Theta$，故$v\in \Theta_x$
+\end{proof}
+\par
+将式~\ref{eq:l4}~带入式~\ref{eq:18}~中得到
+\begin{equation}\label{eq:20}
+\|\hat{\theta} - \theta\|_x \leq 2\cdot \sup_{\phi\in \Theta_x}\mathbb{G}_x(\phi)
+\end{equation}
+\par
+注意到，对$\forall \phi, \phi^\prime \in \Theta_x, \mathbb{G}_x(\phi) - \mathbb{G}_x(\phi^\prime)$是次高斯随机变量，根据Dudley熵积分，有
+\begin{equation}\label{eq:21}
+\mathbb{E}\sup_{\phi \in \Theta_x} \mathbb{G}_x(\phi) \lesssim \frac{\sigma}{n}\int_0^\infty \sqrt{\log N(\epsilon;\Theta_x,\|\cdot\|_x)} \mathrm{d}\epsilon
+\end{equation}
+\par
+其中，$N(\epsilon;\Theta_x,\|\cdot\|_x)$是$\Theta_x$在$\|\cdot\|_x$中的覆盖数，即满足$\sup_{\phi\in\Theta_x}\inf_{\phi^\prime \in \mathcal{H}}\|\phi-\phi^\prime\|_x \leq \epsilon$的最小集合$\mathcal{H}$的大小。
+\par
+将式~\ref{eq:20}~带入式~\ref{eq:21}~中得到
+\begin{equation}\label{eq:22}
+\mathbb{E} [\|\theta-\hat{\theta}\|_x] \lesssim \frac{\sigma}{n}\int_0^\infty \sqrt{\log N(\epsilon;\Theta_x,\|\cdot\|_x)} \mathrm{d}\epsilon
+\end{equation}
+
+\par
+由于关于$\|\phi\|_x\leq 1$的性质难以推导，这里希望将其转化为$\|\phi\|_2 \leq 1$的性质的推导，由此我们引入限制特征值(restricted eigenvalues)的概念，
+\begin{definition}
+对于$\{z_i\}_{i=1}^n$，它对参数类$\Phi \subset \mathbb{R}^d$最小和最大限制特征值定义为
+\begin{equation}\label{eq:23}
+\lambda_{\min}(\{z_i\}_{i=1}^n; \Phi) := \inf_{\phi\in \Phi}\|\phi\|_x^2/\|\phi\|_2^2
+\end{equation}
+\begin{equation}\label{eq:24}
+\lambda_{\max}(\{z_i\}_{i=1}^n; \Phi) := \inf_{\phi\in \Phi}\|\phi\|_x^2/\|\phi\|_2^2
+\end{equation}
+\end{definition}
+
+\par
+对$\rho > 0$，令
+\[
+\Theta_2(\rho) = \{\phi = \theta-\theta^\prime: \theta, \theta^\prime \in \Theta, \|\phi\|_2\leq \rho\}
+\]
+\par
+可以证明，对于参数类$\Theta(\rho)$，可以给出限制特征值的界
+\begin{lemma}
+假设$\{z_i\}_{i=1}^n$为次高斯随机向量，对$\forall \rho > 0, \delta \in (*0,1/2], \epsilon\in (0,1/2]$，以下不等式以概率$1-\delta$成立
+\begin{equation}
+\lambda_{\min}(\{z_i\}_{i=1}^n; \Theta_2(\rho)) \geq \frac{C}{4}-O(Z\sqrt{\log(n/\delta)})\cdot \big(\epsilon + \sqrt{\frac{\log N(epsilon;\Theta_2(1),\|\cdot\|_2\log(1/\delta))}{n}}\big)
+\end{equation}
+\begin{equation}
+\lambda_{\max}(\{z_i\}_{i=1}^n; \Theta_2(\rho)) \leq 4C-O(Z\sqrt{\log(n/\delta)})\cdot \big(\epsilon + \sqrt{\frac{\log N(epsilon;\Theta_2(1),\|\cdot\|_2\log(1/\delta))}{n}}\big)
+\end{equation}
+\end{lemma}
+\par
+因为以上得到的对限制特征值和$\|\hat{\theta}-\theta\|_x$的估计都与覆盖数有关，因此若能对覆盖数给出估计，就能得到最终的结果。
+
+
+\begin{lemma}\label{le:9}
+对$\forall \rho > 0, \epsilon \in (0,1]$，有以下成立
+\begin{equation}
+\log N(\epsilon; \Theta_2(\rho),\|\cdot\|_2) \lesssim m\log(\rho d/s)
+\end{equation}
+\end{lemma}
+
+\par
+通过取$\epsilon = \kappa c/C\sqrt{\log(n/\delta)}$，则可得对充分小的$\kappa > 0$，有$\epsilon \cdot O(C^2 \sqrt{\log(n/\delta)}) \leq c/16$.
+\par
+当
+\[
+	n \gtrsim c^{-1}C^2 m\cdot \log(c^{-1}Cd\log(n/\delta))\log^2(n/\delta)
+\]
+则以概率$1-\delta$，有
+\[
+	\lambda_{\min}(\{z_i\}_{i=1}^n; \Theta_2(\rho)) \geq c/8, \lambda_{\max}(\{z_i\}_{i=1}^n; \Theta_2(\rho)) \leq 8C
+\]
+\par
+则有$c/16\|\phi\|_2^2 \leq \|\phi\|_x^2 \leq 16C\|\phi\|_2^2, \forall \phi \in \Phi$，进而有
+\[
+	N(\epsilon;\Theta_x,\|\cdot\|_x) \leq \log N(\epsilon/4\sqrt{C};\Theta_2(4/\sqrt{c},\|\cdot\|_2))
+\]
+\par
+根据引理~\ref{le:9}~有
+\[
+\log N(\epsilon;\Theta_x,\|\cdot\|_x) \lesssim m \log(c^{-1}Cd/\epsilon)
+\]
+\par
+将其带入式~\ref{eq:22}~并注意到
+\[
+	\int_0^\infty \sqrt{\max\{\log(1/\epsilon), 0\}}\mathrm{d}\epsilon = O(1)
+\]
+\par
+则可知定理~\ref{theo:1}~成立。
+\end{proof}
+
+
+
+\section{定理~\ref{theo:2}~的证明}\label{pr:2}
+
+\begin{proof}
+为了证明下界，这里先引入以下引理
+\begin{lemma}[\citet{tsybakov2008introduction}]
+设$\Theta_M = (\theta_0, \theta_1, \cdots, \theta_M)$是一个有限参数集，设$P_j$为$\theta_j, j\ in \{0,1,\cdots, M\}$对应的概率分布测度。设$\mathfrak{d}:\Theta_M\times \Theta_M\rightarrow \mathbb{R}^+$定义了$\Theta_M$与$\Theta_M$乘积空间上的一个半距离，并且具有以下的性质：
+\begin{enumerate}
+\item $\mathfrak{d}(\theta_j,\theta_k)\geq 2\rho > 0, \forall j,k\in\{0,1,\cdots,M\}$;
+\item $P_j \ll P_0, \forall j \in \{1,\cdots, M\}$;
+\item $\frac{1}{M}\sum_{j=1}^M KL(P_j\|P_0)\leq \gamma\log M$。 
+\end{enumerate}
+\par
+并且以下成立，
+\begin{equation}
+\inf_{\hat{\theta}} \sup_{\theta_j\ in \Theta_M} \mathrm{Pr}_j[\mathfrak{d}(\hat{\theta},\theta_j)\geq \rho] \geq \frac{\sqrt{M}}{1+\sqrt{M}}(1-2\gamma-2\sqrt{\frac{\gamma}{\log M}})
+\end{equation}
+\end{lemma}
+\par
+其中$KL(\cdot,\cdot)$是两个概率分布之间的Kullback-Leibler信息量。
+\par
+由于在定理~\ref{theo:2}~中假设$x_i$独立同分布于正态分布，噪声也服从正态分布，因此有以下的推论：
+\begin{corollary}\label{coro:13}
+设$\Theta$为神经网络中的参数集合，记$\rho_{\min} = \min_{j>0}\|\theta_0- \theta_j\|_2/2$，和$\rho_{avg}^2 = \frac{1}{M}\sum_{j=1}^M \|\theta_j-\theta_0\|^2_2$，则对于任意的$n$，有
+\[
+\inf_{\hat{\theta}} \sup_{\theta_j\in \Theta_M} \mathbb{E}_\mu [\|\hat{\theta}_n-\theta\|_2] \geq \rho_{\min} \times\frac{\sqrt{M}}{1+\sqrt{M}}\bigg(1-\frac{n\rho_{avg}^2}{\sigma^2\log M}-2\sqrt{\frac{n\rho_{avg}^2}{2\sigma^2\log^2 M}}\bigg)
+\]
+\end{corollary}
+
+\begin{lemma}\label{le:14}
+设$\Theta \in \mathbb{R}^d$为神经网络参数集，$\mathcal{I}\subset [d]=\{1,2,\cdots,d\}$，设对任意的$u \in \mathbb{R}^{|\mathcal{I}|}$存在$\theta\in \Theta$使得$u$为$\theta$在$\mathcal{I}$维度上的限制，则存在推论中的有限子集$\Theta^\prime \subset \Theta$，使得$\log M \asymp |\mathcal{I}|, \rho_{\min} \asymp \rho_{avg} \asymp \sqrt{|\mathcal{I}|}\epsilon, \forall \epsilon > 0$.
+\end{lemma}
+\par
+下面的引理说明$\theta$的前$m$个组成成分为自由变量。
+\begin{lemma}\label{le:15}
+设$\mathcal{I} = \{1,\cdots,m\}$，则对任意的$u\in \mathbb{R}^m$，存在$\theta \in \Theta$满足$\theta|_{\mathcal{I}} = u$
+\end{lemma}
+
+\par
+令$\epsilon \asymp \sigma \sqrt{m/n}$，则由引理~\ref{le:14}~和~\ref{le:15}~以及推论~\ref{coro:13}~知，定理~\ref{theo:2}~成立。
+
+\end{proof}
+
+

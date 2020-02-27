@@ -1,0 +1,155 @@
+\chapter{一般神经网络理论}
+在介绍卷积神经网络的理论之前，本文先介绍一般神经网络的理论分析结果。本文按照神经网络的层数进行结果总结，并给出考虑不同的损失函数时的结果的对比。
+
+\section{神经网络中的重要理论问题}
+深度学习在诸多领域展现出卓越的效果，在许多方面已经超过了人类的水平。现实中，人们趋于在计算能力允许的情况下，使用更深更宽的神经网络，并且实验结果也表明，这样的结果会更好，但是相关的理论解释却一直都欠缺。近些年来，对深度学习的理论研究逐渐增多，	人们对于神经网络的认识逐渐深入。实际使用中的大多数神经网络中的参数数量都远大于用于训练的数据量（称为过参数化神经网络），即使有如此多的参数需要优化，神经网络在训练和测试上的误差都很小。甚至\citet{zhang2016understanding}通过实验表明，即使数据的标签被随机生成的标签替换，过参数化神经网络也可以很好的拟合数据，得到很小的训练误差，虽然在这种情况下，神经网络在测试集上的表现很差。这引起了神经网络理论研究者对两个问题广泛的谈论：1）为什么神经网络的训练误差可以很小，即使数据的标签是随机标签也可以很好的拟合？2）为什么在随机生成的标签数据上训练的神经网络的泛化能力很差，而在真实标签数据训练后的模型的泛化能力较强？真实标签和随机标签对泛化能力的影响如何度量？
+\par
+近些年，一些研究者在第一个问题上的研究表明，理论上，神经网络的确可以拟合随机生成的标签数据\cite{du2018gradient,allen2018convergence,du2018gradient2,zou2018stochastic}。尽管对于第二个问题，研究者尚未给出较好的解答，也有很多研究给出了对神经网络泛化能力的估计。本文将按照神经网络的层数对现有的一些结果进行总结，有的结果是对第一个问题的回答，也有的结果给出训练好的模型在测试集上的泛化能力的上界控制。通常在训练集上的拟合被称为优化过程(Optimization)，在测试集上的预测准确率被称为泛化能力(Generalization)。
+\par
+现有的文献主要从以下的几个方面对神经网络的可解释性进行理论研究，每一项研究都研究了其中的若干问题。
+\begin{enumerate}
+  \item 对于给定的输入训练数据，神经网络是否有能力对数据进行较好的拟合。
+  \item 对神经网络的训练过程实际上就是在寻找使得Loss最小的权重张量，权重张量给出了对数据的输出和输入之间的对应关系的一个拟合，但是数据之间的对应关系具有高度的非凸性，Gradient Descent(GD)和Stocastic Gradient Descent(SGD) 算法为什么可以收敛，是否可以收敛到全局最优解，SGD可以拟合的函数类具有什么性质。
+  \item SGD算法收敛到最优解的速度是怎么样的。
+  \item SGD算法可以拟合训练数据，收敛到可以拟合输入数据之间对应关系的最优解，但是该最优解对与输入数据独立同分布取样的数据是否可以拟合，效果如何，即，最优解的泛化能力如何。
+\end{enumerate}
+
+
+\section{两层神经网络}
+\citet{du2018gradient}考虑了一个两层的神经网络，使用了ReLU激活函数，并考虑的是二次损失函数(quadratic loss)。
+\par
+具体地说，考虑的神经网络的输入为$x$，第一层的网络的权重参数为$W = [w_1,\cdots, w_m], w_r \in \mathbb{R}^d$，第二层的权重为$a = [a_1,\cdots, a_m], a_r \in \mathbb{R}$，则神经网络可以写为
+\begin{equation}
+f(W,a,x) = \frac{1}{\sqrt{m}}\sum_{r = 1}^m a_r \sigma(w_r^\top x)
+\end{equation}
+\par
+其中$\sigma(\cdot)$为ReLU激活函数。
+\par
+给定训练数据$\{(x_i,y_i)\}_{i=1}^n$，训练的损失函数为
+\begin{equation}
+l(W,a) = \sum_{i=1}^n \frac{1}{2}(f(W,a,x_i)-y_i)^2
+\end{equation}
+\par
+在现有的文献中，通常固定最后一层的权重，而只训练其余层的权重参数，在这里，也只训练第一层的权重参数。利用梯度下降(Gradient Descent)算法的优化过程为
+\begin{equation}
+W(k+1) = W(k) - \eta \frac{\partial l(W(k),a)}{\partial W(k)}
+\end{equation}
+\par
+其中$\eta>0$为训练时的学习率。梯度如下计算
+\begin{equation}
+\frac{\partial l(W,a)}{\partial w_r} = \frac{1}{\sqrt{m}}\sum_{i=1}^n (f(W,a,x_i)-y_i)a_r x_i \mathbb{I}\{w_r^\top x_i \geq 0\}
+\end{equation}
+\par
+在以上的设定下，有以下的结果。
+\begin{theorem}\label{theo:2:1}
+令$H^\infty_{ij} = \mathbb{E}_{w\sim \mathcal{N}(0,I)}[x_i^\top x_j \mathbb{I}\{w^\top x_i \geq 0, w^\top x_j \geq 0\}]$，则$H^\infty = (H^\infty_{ij})_{ij}$，假设$\lambda_0 = \lambda_{\min}(H^\infty) > 0$，且$\|x_i\|_2 = 1,|y_i| \leq C, \forall i\in [1,\cdots,n],C$为一常数，若隐藏层的神经节点数量为$m = \Omega(\frac{n^6}{\lambda_0^4\delta^3})$，且$w_r$的初始值独立同分布于$\mathcal{N}(0,I)$，$a_r$独立同分布于$\{-1,1\}$上的均匀分布，当取$\eta = O(\frac{\lambda_0}{n^2})$时，则对梯度下降算法至少以概率$1-\delta$有
+\[
+\|u(k)-y\|_2^2 \leq (1-\frac{\eta\lambda_0}{2})^k\|u(0)-y\|_2^2
+\]
+\par
+其中，$u_i(k) = f(W(k),a,x_i), u(k) = [u_1(k),\cdots,u_n(k)]$。
+\end{theorem}
+\par
+以上定理说明，当网络足够宽时，训练的误差以线性收敛速度收敛到0。定理中对数据进行了归一化假设，这通过对数据预处理可以实现，而$|y_i|\leq C$则对现实中的大多数数据都适用。由于ReLU激活函数使得训练的目标函数具有很强的非光滑性和非凸性，但是以上的定理说明，即使在这样的情况下，梯度下降算法也可以以线性收敛速度收敛。
+
+\par
+如果对输入的数据进行更强的假设，则可以得到\citet{li2018learning}的结果。
+\par
+设每个分布为$\mathcal{D}$的数据都是按照以下的规则产生的。设有$k\times l $个未知分布$\mathcal{D}_{ij}$，及$p_{ij}\geq 0 $满足$\sum_{i=1}^k \sum_{j=1}^l p_{ij} = 1$，每个数据都是独立同分布产生的：(1) 取样$z\in[k]\times [l]$满足$Pr(z = (i,j)) = p_{ij}$；(2)令$y = z[0]$，而$x$从分布$\mathcal{D}_{z}$中取样。对数据做以下的假设：
+\begin{assumption}
+存在$\delta > 0$满足对任意的$i_1\neq i_2 \in [k]$及$j_1,j_2\in [l]$,$dist(supp(\mathcal{D}_{i_1j_1}),supp(\mathcal{D}_{i_2j_2}))\geq \delta$，另外，对$\forall i\in [k],j\in[l]$，当$\lambda \leq 1/(8l)$时，有$diam(supp(\mathcal{D_{ij}}))\leq \lambda\delta$。
+\par
+其中，$dist(S_1,S_2) = \min_{x\in S_1, y\in S-2} \|x-y\|_2, diam(S) = \max_{x,y\in S} \|x-y\|_2$
+\end{assumption}
+\par
+这里考虑的损失函数为交叉熵损失函数。
+\[
+l(W,a) = -\frac{1}{n}\sum_{i=1}^n\log(o_{y_s}(x_s,W,a))
+\]
+\par
+其中，$o_y(x,W,a) = \frac{e^{f_y(W,a,x)}}{\sum_{i=1}^ke^{f_i(W,a,x)}}$.
+\par
+利用批量随机梯度下降算法，批量大小为$B$，迭代的次数为$T = n/B$，设第$t$次迭代中的数据的索引为$\mathcal{B}_t$，则权重更新方法如下：
+\begin{equation}
+w_r(t+1) = w_r(t) - \eta\frac{1}{B}\sum_{s\in \mathcal{B}_t}\frac{\partial l(W,a),x_s,y_s}{\partial w_r(t)}, \forall r \in [m]
+\end{equation}
+\par
+其中
+\[
+\frac{\partial l(W,a,x_s,y_s)}{\partial w_r} = \bigg(\sum_{i\neq y_s }a_i o_i(x_s,W,a)- \sum_{i\neq y_s}a_{y_s}o_i(x_s,w)\bigg)\mathbb{I}\{w_r^\top x_s\geq 0\}x_s
+\]
+\par
+基于以上的假设，有以下的结果：
+\begin{theorem}
+对$\forall \epsilon > 0$，存在$M = poly(k,l,1/\delta,1/\epsilon)$，使得当$m\geq M$时，当$B = poly(k,l,1/\delta,1/\epsilon,\log(m))$,$\eta = \frac{1}{m\cdot poly(k,l,1/\delta,1/\epsilon,\log m)}, T = poly(k,l,1/\delta,1/\epsilon,\log m)$时
+\[
+Pr_{x,y\sim \mathcal{D}}\big[\forall j \in [k], j\neq y, f_y(W(T),a,x)>f_j(W(T),a,x)\big]\geq 1-\epsilon
+\]
+\end{theorem}
+
+\par
+接下来考虑一类更加特殊的数据类型，称为线性可分数据，并且数据的标签只有两种，$y\in \{-1,1\}$，线性可分数据为存在$w^*$满足$Pr_{x,y\sim \mathcal{D}}(y\langle w^*, x\rangle\geq 1) = 1$。
+\par
+考虑平均Hinge损失函数：
+\[
+l(W,a) = \frac{1}{n}\sum_{i=1}^n \max\{1-y_if(W,a,x_i),0\}
+\]
+\par
+在以上的设定下，可以对神经网络的收敛速度给出上界估计和下界估计\cite{brutzkus2017sgd}。
+\begin{theorem}[上界]
+SGD在进行至多$M_k$次非零更新后收敛到全局最优解，其中
+\[
+M_k = \frac{\|w^*\|^2}{\alpha^2}+\frac{\|w^*\|^2}{k\eta v^2\alpha^2}+\frac{\sqrt{R(8k^2\eta^2v^2+8\eta k)}\|w^*\|^{1.5}}{2k(\eta k \alpha)^{1.5}} + \frac{2R\|w^*\|}{\eta v\alpha}
+\]
+\end{theorem}
+\begin{theorem}[下界]
+取$R = v = \frac{1}{\sqrt{2k}}$，则对任意的$d$存在一列线性可分数据，使得SGD至少会进行$\Omega(\frac{\|w^*\|}{\eta}+\|w^*\|^2)$次非零更新。
+\end{theorem}
+\par
+以上的两个定理，对神经网络在训练数据的训练下，收敛到全局最优解的迭代次数的估计，下面的定理给出了训练得到的神经网络模型在随机从$\mathcal{D}$中取样的数据上的预测准确率的估计。
+\begin{theorem}
+设$n\geq 2c_k$，则对$S$和$W_0$，以至少概率$1-\delta$，有
+\[
+l_{\mathcal{D}}^{0-1}(SGD_k(S,W_0))\leq l_{V}^{0-1}(SGD_k(S,W_0)) + \sqrt{l_{V}^{0-1}(SGD_k(S,W_0))\frac{4c_k\log(n/\delta)}{n}} + \frac{8c_k\log(n/\delta)}{n}
+\]
+\par
+其中$S = \{(x_i,y_i)\}_{i=1}^n$，而$W_0$为权重的初始值，满足其任意一行$w_{r,0}$满足存在一个固定常数$R>0$使得$\|w_{r,0}\|\leq R$,$SGD(S,W_0)$为神经网络的输出，具体地，$SGD(S,W_0) = B_{W_0}(x_{i_1},\cdots,x_{i_{c_k}})$，其中$c_k\leq M_k$，其中$(i_1,\cdots,i_{c_k})\in [n]^{c_k}$，令$V = \{x_j:j\notin \{i_1,\cdots,i_{c_k}\}\}$
+\end{theorem}
+
+\begin{theorem}
+若$n\geq 2c_k, R = v = \frac{1}{\sqrt{2k}}$，则对$S,W_0$以至少概率$1-\delta$有SGD收敛到全局最优解，并且在分布$\mathbb{D}$上的0-1测试误差至多为
+\[
+\frac{8}{n}\big(\frac{\|w^*\|^2}{\alpha^2}+O(\frac{\|w^*\|^2}{\min\{\eta,\sqrt{\eta}\}})\big)\log(n/\delta)
+\]
+
+\end{theorem}
+
+
+\section{多层神经网络}
+考虑一个$L$层的神经网络，对训练数据做进一步的假设如下：
+\begin{assumption}
+对$\forall i,j\in [n], i\neq j$，有$\|x_i-x_j\|\geq \delta$
+\end{assumption}
+\par
+设网络的第一层的权重参数为$A$，第$l$层的权重参数为$W_l$，最后一层的权重参数为$B$，考虑二次损失函数，则有以下的两个结果\cite{allen2018convergence}
+\begin{theorem}
+假设$m\geq \tilde{\Omega}(poly(n,L,1/\delta)\cdot d)$，则至少以概率$1-\exp\{-\Omega(\log^2(m))\}$，梯度下降算法在取学习率为$\eta = \Theta(\frac{d\delta}{poly(n,L)\cdot m})$时，需要
+\[
+T = \Theta(\frac{poly(n,L)}{\delta^2}\cdot \log(1/\epsilon))
+\]
+次迭代达到$l(W)\leq \epsilon$。
+\end{theorem}
+\begin{theorem}
+假设$b\in [n], m\geq \tilde{\Omega}(poly(n,L,1/\delta)\cdot d/b)$，则至少以概率$1-\exp\{-\Omega(\log^2(m))\}$，随机梯度下降算法在取学习率为$\eta = \Theta(\frac{d\delta}{poly(n,L)\cdot m})$，批量值为$b$时，需要
+\[
+T = \Theta(\frac{poly(n,L)}{\delta^2b}\cdot \log(1/\epsilon))
+\]
+次迭代达到$l(W)\leq \epsilon$。
+\end{theorem}
+\par
+以上的两个定理说明，GD和SGD算法在网络过参数化的情形下，训练过程收敛。即对于神经网络的优化过程，对于服从任意分布并满足假设2.2的数据，过参数化神经网络可以很好的拟合数据。
+
+\section{其他理论结果}
+\citet{allen2019learning}考虑了三层神经网络，他们通过理论分析结果说明了神经网络在足够宽（即过参数化），训练样本数据足够多，训练次数足够多的情况下，训练误差可以以很大概率收敛到最优解，并且三层的神经网络比两层神经网络的学习能力更强，可以学习到更多的函数，对更大的函数类进行拟合。\citet{du2018gradient}考虑了多层神经网络证明了当网络足够宽，适当的选取学习率时，梯度下降算法训练损失可以以线性收敛速度收敛到0，并将结果扩展到了ResNet和CNN上。\citet{cao2019generalization}考虑了多层过参数化神经网络，在激活函数为ReLU，损失函数为0-1损失函数的情形下，给出了SGD算法的0-1测试误差的上界估计，从而理论上证明了模型的泛化能力。
+\par
+有一些研究者为了简化问题，对输入的数据进行了假设，比如上文提到的\citet{brutzkus2017sgd}假设数据为线性可分的，\citet{li2018learning}假设输入数据从多个分布独立取样，且不同分布之间的距离足够大，还有一些研究者也对数据进行了假设\cite{ge2017learning,kawaguchi2016deep}。与此同时，有一些研究者为了摆脱数据分布的束缚，而研究与数据分布无关的结果，得到基于PAC-学习的结果\cite{neyshabur2017pac,allen2019learning,pitas2019better,arora2018stronger}.
