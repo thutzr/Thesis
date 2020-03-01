@@ -23,9 +23,8 @@
 \subsubsection{单层卷积层加单层平均池化层}
 对于输入$x\in \mathbb{R}^d$，考虑神经网络$F_1: \mathbb{R}^d \mapsto \mathbb{R}$，具体地，
 \[
-  F_1(x;w) = \sum_{l=0}^{r-1}w^{\top} \mathrm{P}_l^s x
+  F_1(x;w) = \sum_{l=0}^{r-1}w^{\top} \mathrm{P}_l^s x,
 \]
-\par
 其中$r\approx d/s$，$\mathrm{P}_l^s x=[x_{ls+1},x_{ls+2},\cdots,x_{ls+m}]$，神经网络的结构如图
 \begin{figure}
 \centering
@@ -36,9 +35,8 @@
 \par
 设$\{x_i,y_i\}_{i=1}^n$ 为$n$个训练样本数据，其中$x_i \in \mathbb{R}^d$为输入向量，而$y\in \mathbb{R}$为对应的值。由于实际的数据并不是完全由对应关系决定，而可能会加入噪声，所以这里引入均值为0的噪声，即
 \[
-  y_i = F_1(x_i;w_0)+\varepsilon_i
+  y_i = F_1(x_i;w_0)+\varepsilon_i,
 \]
-\par
 其中$\mathbb{E}[\varepsilon_i|x_i] = 0$，输入数据$\{x_i\}_{i=1}^n$从一个未知的分布$\mu$中独立同分布(i.i.d)的取样得到，并且$\mathrm{supp}\mu = \mathbb{R}^d$，即对于$\forall A \in \sigma(\mathbb{R}^d), \mu(A) > 0$，其中$\sigma(\cdot)$为$\sigma-$代数。
 \par
 对于数据的分布和噪声，有以下的假设：
@@ -54,14 +52,14 @@
 \par
 这里的目标是通过训练数据训练神经网络的参数——权重$w$，即
 \[
-	arg\min_{\hat{w_n}} \sqrt{\mathbb{E}_{x\sim\mu}|F_1(x;\hat{w_n})- F_1(x;w_0)|^2}
+	arg\min_{\hat{w_n}} \sqrt{\mathbb{E}_{x\sim\mu}|F_1(x;\hat{w_n})- F_1(x;w_0)|^2}.
 \]
 \par
 这里定义$\mathfrak{M}(n;F_1) = \inf_{\hat{w_n}}\sup_{w_0}\mathbb{E}_{\mu,w_0}[err(\hat{w_n},w_0)]$，其中$err(\hat{w_n},w_0) = \sqrt{\mathbb{E}_{x\sim\mu}|F_1(x;\hat{w_n})- F_1(x;w_0)|^2}$，则有以下的结果，它给出了$\mathfrak{M}(n;F_1)$的一个上界。
 \begin{theorem}\label{theo:1}
 对于$\delta\in (0,1/2)$和充分大的$n$，对于$\{x_i\}_{i=1}^n$的随机抽样，有$1-\delta$的概率，以下成立
 \[
-	\mathfrak{M}(n;F_1) \lesssim \sqrt{\frac{\sigma^2 m \log d}{n}}
+	\mathfrak{M}(n;F_1) \lesssim \sqrt{\frac{\sigma^2 m \log d}{n}},
 \]
 其中，$\lesssim$表示在不计常数下的$<$。
 \end{theorem}
@@ -86,9 +84,8 @@
 \par
 对于输入$x\in \mathbb{R}^d$，考虑神经网络$F_2: \mathbb{R}^d \mapsto \mathbb{R}$，具体地，
 \[
-  F_1(x;w) = \sum_{l=0}^{r-1}a_l w^{\top} \mathrm{P}_l^s x
+  F_1(x;w) = \sum_{l=0}^{r-1}a_l w^{\top} \mathrm{P}_l^s x,
 \]
-\par
 其中$r\approx d/s$，$\mathrm{P}_l^s x=[x_{ls+1},x_{ls+2},\cdots,x_{ls+m}]$，神经网络的结构如图
 \begin{figure}
 \centering
@@ -99,7 +96,7 @@
 \par
 设$\{x_i,y_i\}_{i=1}^n$ 为$n$个训练样本数据，在这里有
 \[
-  y_i = F_2(x_i;w_0)+\varepsilon_i
+  y_i = F_2(x_i;w_0)+\varepsilon_i.
 \]
 \par
 对于数据的分布和噪声的假设与前一部分一样。
@@ -108,9 +105,8 @@
 \begin{theorem}\label{theo:3}
 对于$\delta\in (0,1/2)$和充分大的$n$，对于$\{x_i\}_{i=1}^n$的随机抽样，有$1-\delta$的概率，以下成立
 \[
-	\mathfrak{M}(n;F_2) \lesssim \sqrt{\frac{\sigma^2 \min\{d,m+(d/s)\times (m/s)\}\cdot \log d}{n}}
+	\mathfrak{M}(n;F_2) \lesssim \sqrt{\frac{\sigma^2 \min\{d,m+(d/s)\times (m/s)\}\cdot \log d}{n}},
 \]
-\par
 其中，$\lesssim$表示在不计常数下的$<$。
 \end{theorem}
 
@@ -133,37 +129,33 @@
 \subsubsection{记号及基本假设}
 这里考虑一个$L$层卷积层的卷积神经网络$f(w;X)$，其中$w\in \mathbb{R}^d$为网络的参数，输入数据为$X\in \mathbb{R}^{r_0\times c_0}$，网络的输出为$v\in \mathbb{R}^{d_{l+1}}$，第$i$层卷积层的输入为$X_{i-1} \in \mathbb{R}^{\tilde{r}_{i-1}\times \tilde{c}_{i-1}\times \tilde{d}_{i-1}}$，输出为$X_{i} \in \mathbb{R}^{\tilde{r}_{i}\times \tilde{c}_{i}\times \tilde{d}_{i}}$。第$i$层卷积层进行的计算如下：
 \[
- Z_i(:,:,j) = X_{i-1}\circledast W_i^j \in \mathbb{R}^{r_i\times c_i}, \forall j=1,\cdots,d_i
+ Z_i(:,:,j) = X_{i-1}\circledast W_i^j \in \mathbb{R}^{r_i\times c_i}, \forall j=1,\cdots,d_i,
 \]
 \[
-Y_i = \sigma_1(Z_i)\in \mathbb{R}^{r_i\times c_i \times d_i}
+Y_i = \sigma_1(Z_i)\in \mathbb{R}^{r_i\times c_i \times d_i},
 \]
 \[
- X_i = pool(Y_i) \in \mathbb{R}^{\tilde{r}_i\times \tilde{c}_i \times d_i}
+ X_i = pool(Y_i) \in \mathbb{R}^{\tilde{r}_i\times \tilde{c}_i \times d_i},
 \]
-\par
 其中，$W_i^j \in \mathbb{R}^{k_i\times k_i \times d_{i-1}}$为第$i$个卷积层的第$j$个卷积核，$\circledast, pool(\cdot), \sigma_1(\cdot)$分别代表卷积操作、池化和sigmoid函数。
 \par
 整个网络的最后一层为一个全连接层，则最后一层的计算为
 \[
-u = W_{l+1}x_i \in \mathbb{R}^{d_{l+1}}
+u = W_{l+1}x_i \in \mathbb{R}^{d_{l+1}},
 \]
 \[
-v = \sigma_2(u) \in \mathbb{R}^{d_{l+1}}
+v = \sigma_2(u) \in \mathbb{R}^{d_{l+1}},
 \]
-\par
 其中，$x_i = vec(X_i)$为$X_i$的向量化，$\sigma_2(\cdot)$为softmax函数。
 \par
 这里我们考虑的损失函数为
 \[
-	\tilde{Q}_n(w) = \frac{1}{n} l(f(w;X_i), y_i)
+	\tilde{Q}_n(w) = \frac{1}{n} l(f(w;X_i), y_i),
 \]
-\par
 其中$l(f(w;X),y) = \frac{1}{2}\|v-y\|_2^2$，同时，模型在整体分布上的误差为
 \[
-	Q(w) = \mathbb{E}_{X,y \sim \mathcal{D}} l(f(w;X),y)
+	Q(w) = \mathbb{E}_{X,y \sim \mathcal{D}} l(f(w;X),y),
 \]
-\par
 其中$\mathcal{D}$为输入数据的分布。
 \par
 为了证明$\tilde{Q}_n(w)$可以收敛到$Q(w)$，这里需要先引入两个基本假设。
@@ -172,10 +164,10 @@ v = \sigma_2(u) \in \mathbb{R}^{d_{l+1}}
 \begin{assumption}
 第$i$层卷积层的第$j$个卷积核$W_i^j\in\mathbb{R}^{k_i\times k_i \times d_{i-1}}$和$W_{L+1}\in \mathbb{R}^{d_{L+1}\times \tilde{r_L}\tilde{c_L}d_L}$均有界
 \[
-\|W_i^j\|_F \leq b_i (1\leq j\leq d_i; 1\leq i \leq L )
+\|W_i^j\|_F \leq b_i (1\leq j\leq d_i; 1\leq i \leq L ),
 \]
 \[
-\|W_{L+1}\|_F \leq b_{L+1}
+\|W_{L+1}\|_F \leq b_{L+1},
 \]
 其中$b_i, 1\leq i \leq L+1$为有限正常数。
 \end{assumption}
@@ -193,9 +185,8 @@ v = \sigma_2(u) \in \mathbb{R}^{d_{l+1}}
 \begin{lemma}
 在以上两个假设成立的条件下，如果$n\geq c_{f^\prime}L^2(b_{L+1}+\sum_{i=1}^L d_i b_i)^2 \max_i \sqrt{r_ic_i}/(\theta \varrho \epsilon^2)$，其中$c_{f^\prime}$为一个常数，则以概率$1-\epsilon$，有
 \begin{equation}
-\sup_{w\in \Omega} |\tilde{Q}_n(w)-Q(w)|\leq \sqrt{\frac{\theta \varrho +\log(4/\epsilon)}{2n}}
+\sup_{w\in \Omega} |\tilde{Q}_n(w)-Q(w)|\leq \sqrt{\frac{\theta \varrho +\log(4/\epsilon)}{2n}},
 \end{equation}
-\par
 其中$\theta = a_{L+1}(d_{L+1}+\tilde{r}_L\tilde{c}_Ld_L+1)+\sum_{i=1}^L a_i(k_i^2d_{i-1}+d_i+1),  \varrho = \sum_{i=1}^L \log\big(\frac{\sqrt{d_i}b_i(k_i-s_i+1)}{4p}\big)+\log(b_{L+1}) + \log{\frac{n}{128p^2}}$
 \end{lemma}
 \par
@@ -216,15 +207,15 @@ v = \sigma_2(u) \in \mathbb{R}^{d_{l+1}}
 \begin{theorem}\label{theo:2:2}
 在假设成立的情形下，经验梯度一致收敛，即，存在常数$c_{g^\prime}, c_g$，满足当$n \geq c_{g^\prime}\frac{L^2 b_{L+1}^2(b_{L+1}+\sum_{i=1}^Ld_ib_i)^2(r_0d_0c_0)^4}{d_0^4b_1^8(d\log(6)+\theta\varrho)\epsilon^2\max_i(r_ic_i)}$时，有
 \[
-\sup_{w\in \Omega} \|\nabla_w \tilde{Q}_n(w)-\nabla_wQ(w)\|_2\leq c_g \beta \sqrt{\frac{2d+\theta\varrho+\log(4/\epsilon)}{2n}}
+\sup_{w\in \Omega} \|\nabla_w \tilde{Q}_n(w)-\nabla_wQ(w)\|_2\leq c_g \beta \sqrt{\frac{2d+\theta\varrho+\log(4/\epsilon)}{2n}}.
 \]
 \par
 至少以概率$1-\epsilon$成立，其中
 \[
-\beta = [\frac{r_Lc_Ld_L}{8p^2}+\sum_{i=1}^L\frac{b_{L+1}^2d_{i-1}}{8p^2b_i^2d_i}r_{i-1}c_{i-1}\Pi_{j=i}^l\frac{d_jb_j^2(k_j-s_j+1)^2}{16p^2}]^{1/2}
+\beta = [\frac{r_Lc_Ld_L}{8p^2}+\sum_{i=1}^L\frac{b_{L+1}^2d_{i-1}}{8p^2b_i^2d_i}r_{i-1}c_{i-1}\Pi_{j=i}^l\frac{d_jb_j^2(k_j-s_j+1)^2}{16p^2}]^{1/2},
 \]
 \[
-d = \tilde{r}_L\tilde{c}_L d_Ld_{L+1}+\sum_{i=1}^L k_i^2d_{i-1}d_i
+d = \tilde{r}_L\tilde{c}_L d_Ld_{L+1}+\sum_{i=1}^L k_i^2d_{i-1}d_i.
 \]
 \end{theorem}
 \par
@@ -241,9 +232,8 @@ d = \tilde{r}_L\tilde{c}_L d_Ld_{L+1}+\sum_{i=1}^L k_i^2d_{i-1}d_i
 \begin{definition}
 驻点$w$称为非退化驻点，若
 \[
-\inf_i |\lambda_i(\nabla^2 Q(w))| \geq \xi 
+\inf_i |\lambda_i(\nabla^2 Q(w))| \geq \xi ,
 \]
-\par
 其中$\xi$为一个正常数，$\lambda_i(\nabla^2 Q(w))$为Hessian矩阵$\nabla^2 Q(w)$的第$i$个特征值。
 \par
 驻点$w$称为鞍点，若$\nabla^2 Q(w)$的最小的特征值为负。
@@ -253,7 +243,7 @@ d = \tilde{r}_L\tilde{c}_L d_Ld_{L+1}+\sum_{i=1}^L k_i^2d_{i-1}d_i
 \begin{theorem}\label{theo:2:3}
 当$n \geq c_h \max(\frac{d+\theta\varrho}{\xi^2},\frac{L^2b_{L+1}^2(b_{L+1}+\sum_{i=1}^Ld_ib_i)^2(r_0c_0d_0)^4}{d_0^4 b_1^8d\varrho \epsilon^2\max_i(r_ic_i)})$，其中$c_h$为一常数。对$k\in\{1.\cdots,m\}$，存在$\tilde{Q}_n(w)$的非退化驻点$w_n^k$以至少概率$1-\epsilon$与$Q(w)$的非退化驻点$w_k$唯一地对应，同时，至少以概率$1-\epsilon$有
 \[
-\|w_n^k - w_k\|_2 \leq \frac{2c_g \beta}{\xi}\sqrt{\frac{2d+\theta\varrho+\log(4/\epsilon)}{2n}}\quad 1\leq k \leq m
+\|w_n^k - w_k\|_2 \leq \frac{2c_g \beta}{\xi}\sqrt{\frac{2d+\theta\varrho+\log(4/\epsilon)}{2n}}\quad 1\leq k \leq m.
 \]
 
 \end{theorem}
@@ -267,19 +257,18 @@ d = \tilde{r}_L\tilde{c}_L d_Ld_{L+1}+\sum_{i=1}^L k_i^2d_{i-1}d_i
 \begin{theorem}
 对任意的$\eta > 0$，存在$C>0$使得对任意$\beta, \delta > 0, \lambda \geq 1$，以及任意的$\mathbb{R}^{d\times d \times c}\times \mathbb{R}$的乘积$\sigma-$代数上的联合概率分布测度$P$，$\{(x_i, y_i)\}_{i=1}^n$独立同分布于$P$，则对$\forall f\in F_\beta$以至少概率$1-\delta$有
 \[
-\mathbb{E}_{z\sim P}[l_f(x,y)] \leq (1+\eta)\mathbb{E}_S [l_f] + \frac{C(Lk^2c^2(\beta+\log(\lambda n)) + \log(1/\delta))}{n}
+\mathbb{E}_{z\sim P}[l_f(x,y)] \leq (1+\eta)\mathbb{E}_S [l_f] + \frac{C(Lk^2c^2(\beta+\log(\lambda n)) + \log(1/\delta))}{n}.
 \]
 \par
 并且，$\beta \geq 5$时，有
 \[
-\mathbb{E}_{z\sim P}[l_f(x,y)] \leq \mathbb{E}_S[l_f]+C\sqrt{\frac{Lk^2c^2(\beta + \log(\lambda))+\log(1/\delta)}{n}}
+\mathbb{E}_{z\sim P}[l_f(x,y)] \leq \mathbb{E}_S[l_f]+C\sqrt{\frac{Lk^2c^2(\beta + \log(\lambda))+\log(1/\delta)}{n}}.
 \]
 \par
 当$\beta < 5$时，有
 \[
-\mathbb{E}_{z\sim P}[l_f(z)] \leq \mathbb{E}_S[l_f]+ C\big(\beta \lambda \sqrt{Lk^2c^2/n} + \sqrt{\frac{\log(1/\delta)}{n}}\big)
+\mathbb{E}_{z\sim P}[l_f(z)] \leq \mathbb{E}_S[l_f]+ C\big(\beta \lambda \sqrt{Lk^2c^2/n} + \sqrt{\frac{\log(1/\delta)}{n}}\big),
 \]
-\par
 其中$l_f(x,y) = l(f(x),y)$
 \end{theorem}
 

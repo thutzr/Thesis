@@ -1,5 +1,5 @@
-\chapter{一般神经网络理论}
-在介绍卷积神经网络的理论之前，本文先介绍一般神经网络的理论分析结果。本文按照神经网络的层数进行结果总结，并给出考虑不同的损失函数时的结果的对比。
+\chapter{全连接神经网络理论}
+在介绍卷积神经网络的理论之前，本文先介绍全连接神经网络的理论分析结果。本文按照神经网络的层数进行结果总结，并给出考虑不同的损失函数时的结果的对比。
 
 \section{神经网络中的重要理论问题}
 深度学习在诸多领域展现出卓越的效果，在许多方面已经超过了人类的水平。现实中，人们趋于在计算能力允许的情况下，使用更深更宽的神经网络，并且实验结果也表明，这样的结果会更好，但是相关的理论解释却一直都欠缺。近些年来，对深度学习的理论研究逐渐增多，	人们对于神经网络的认识逐渐深入。实际使用中的大多数神经网络中的参数数量都远大于用于训练的数据量（称为过参数化神经网络），即使有如此多的参数需要优化，神经网络在训练和测试上的误差都很小。甚至\citet{zhang2016understanding}通过实验表明，即使数据的标签被随机生成的标签替换，过参数化神经网络也可以很好的拟合数据，得到很小的训练误差，虽然在这种情况下，神经网络在测试集上的表现很差。这引起了神经网络理论研究者对两个问题广泛的谈论：1）为什么神经网络的训练误差可以很小，即使数据的标签是随机标签也可以很好的拟合？2）为什么在随机生成的标签数据上训练的神经网络的泛化能力很差，而在真实标签数据训练后的模型的泛化能力较强？真实标签和随机标签对泛化能力的影响如何度量？
@@ -20,33 +20,30 @@
 \par
 具体地说，考虑的神经网络的输入为$x$，第一层的网络的权重参数为$W = [w_1,\cdots, w_m], w_r \in \mathbb{R}^d$，第二层的权重为$a = [a_1,\cdots, a_m], a_r \in \mathbb{R}$，则神经网络可以写为
 \begin{equation}
-f(W,a,x) = \frac{1}{\sqrt{m}}\sum_{r = 1}^m a_r \sigma(w_r^\top x)
+f(W,a,x) = \frac{1}{\sqrt{m}}\sum_{r = 1}^m a_r \sigma(w_r^\top x),
 \end{equation}
-\par
 其中$\sigma(\cdot)$为ReLU激活函数。
 \par
 给定训练数据$\{(x_i,y_i)\}_{i=1}^n$，训练的损失函数为
 \begin{equation}
-l(W,a) = \sum_{i=1}^n \frac{1}{2}(f(W,a,x_i)-y_i)^2
+l(W,a) = \sum_{i=1}^n \frac{1}{2}(f(W,a,x_i)-y_i)^2.
 \end{equation}
 \par
 在现有的文献中，通常固定最后一层的权重，而只训练其余层的权重参数，在这里，也只训练第一层的权重参数。利用梯度下降(Gradient Descent)算法的优化过程为
 \begin{equation}
-W(k+1) = W(k) - \eta \frac{\partial l(W(k),a)}{\partial W(k)}
+W(k+1) = W(k) - \eta \frac{\partial l(W(k),a)}{\partial W(k)},
 \end{equation}
-\par
 其中$\eta>0$为训练时的学习率。梯度如下计算
 \begin{equation}
-\frac{\partial l(W,a)}{\partial w_r} = \frac{1}{\sqrt{m}}\sum_{i=1}^n (f(W,a,x_i)-y_i)a_r x_i \mathbb{I}\{w_r^\top x_i \geq 0\}
+\frac{\partial l(W,a)}{\partial w_r} = \frac{1}{\sqrt{m}}\sum_{i=1}^n (f(W,a,x_i)-y_i)a_r x_i \mathbb{I}\{w_r^\top x_i \geq 0\}.
 \end{equation}
 \par
 在以上的设定下，有以下的结果。
 \begin{theorem}\label{theo:2:1}
 令$H^\infty_{ij} = \mathbb{E}_{w\sim \mathcal{N}(0,I)}[x_i^\top x_j \mathbb{I}\{w^\top x_i \geq 0, w^\top x_j \geq 0\}]$，则$H^\infty = (H^\infty_{ij})_{ij}$，假设$\lambda_0 = \lambda_{\min}(H^\infty) > 0$，且$\|x_i\|_2 = 1,|y_i| \leq C, \forall i\in [1,\cdots,n],C$为一常数，若隐藏层的神经节点数量为$m = \Omega(\frac{n^6}{\lambda_0^4\delta^3})$，且$w_r$的初始值独立同分布于$\mathcal{N}(0,I)$，$a_r$独立同分布于$\{-1,1\}$上的均匀分布，当取$\eta = O(\frac{\lambda_0}{n^2})$时，则对梯度下降算法至少以概率$1-\delta$有
 \[
-\|u(k)-y\|_2^2 \leq (1-\frac{\eta\lambda_0}{2})^k\|u(0)-y\|_2^2
+\|u(k)-y\|_2^2 \leq (1-\frac{\eta\lambda_0}{2})^k\|u(0)-y\|_2^2,
 \]
-\par
 其中，$u_i(k) = f(W(k),a,x_i), u(k) = [u_1(k),\cdots,u_n(k)]$。
 \end{theorem}
 \par
@@ -57,33 +54,29 @@ W(k+1) = W(k) - \eta \frac{\partial l(W(k),a)}{\partial W(k)}
 \par
 设每个分布为$\mathcal{D}$的数据都是按照以下的规则产生的。设有$k\times l $个未知分布$\mathcal{D}_{ij}$，及$p_{ij}\geq 0 $满足$\sum_{i=1}^k \sum_{j=1}^l p_{ij} = 1$，每个数据都是独立同分布产生的：(1) 取样$z\in[k]\times [l]$满足$Pr(z = (i,j)) = p_{ij}$；(2)令$y = z[0]$，而$x$从分布$\mathcal{D}_{z}$中取样。对数据做以下的假设：
 \begin{assumption}
-存在$\delta > 0$满足对任意的$i_1\neq i_2 \in [k]$及$j_1,j_2\in [l]$,$dist(supp(\mathcal{D}_{i_1j_1}),supp(\mathcal{D}_{i_2j_2}))\geq \delta$，另外，对$\forall i\in [k],j\in[l]$，当$\lambda \leq 1/(8l)$时，有$diam(supp(\mathcal{D_{ij}}))\leq \lambda\delta$。
-\par
-其中，$dist(S_1,S_2) = \min_{x\in S_1, y\in S-2} \|x-y\|_2, diam(S) = \max_{x,y\in S} \|x-y\|_2$
+存在$\delta > 0$满足对任意的$i_1\neq i_2 \in [k]$及$j_1,j_2\in [l]$,$dist(supp(\mathcal{D}_{i_1j_1}),supp(\mathcal{D}_{i_2j_2}))\geq \delta$，另外，对$\forall i\in [k],j\in[l]$，当$\lambda \leq 1/(8l)$时，有$diam(supp(\mathcal{D_{ij}}))\leq \lambda\delta$。其中，$dist(S_1,S_2) = \min_{x\in S_1, y\in S-2} \|x-y\|_2, diam(S) = \max_{x,y\in S} \|x-y\|_2$
 \end{assumption}
 \par
 这里考虑的损失函数为交叉熵损失函数。
 \[
-l(W,a) = -\frac{1}{n}\sum_{i=1}^n\log(o_{y_s}(x_s,W,a))
+l(W,a) = -\frac{1}{n}\sum_{i=1}^n\log(o_{y_s}(x_s,W,a)),
 \]
-\par
 其中，$o_y(x,W,a) = \frac{e^{f_y(W,a,x)}}{\sum_{i=1}^ke^{f_i(W,a,x)}}$.
 \par
 利用批量随机梯度下降算法，批量大小为$B$，迭代的次数为$T = n/B$，设第$t$次迭代中的数据的索引为$\mathcal{B}_t$，则权重更新方法如下：
 \begin{equation}
-w_r(t+1) = w_r(t) - \eta\frac{1}{B}\sum_{s\in \mathcal{B}_t}\frac{\partial l(W,a),x_s,y_s}{\partial w_r(t)}, \forall r \in [m]
+w_r(t+1) = w_r(t) - \eta\frac{1}{B}\sum_{s\in \mathcal{B}_t}\frac{\partial l(W,a),x_s,y_s}{\partial w_r(t)}, \forall r \in [m],
 \end{equation}
-\par
 其中
 \[
-\frac{\partial l(W,a,x_s,y_s)}{\partial w_r} = \bigg(\sum_{i\neq y_s }a_i o_i(x_s,W,a)- \sum_{i\neq y_s}a_{y_s}o_i(x_s,w)\bigg)\mathbb{I}\{w_r^\top x_s\geq 0\}x_s
+\frac{\partial l(W,a,x_s,y_s)}{\partial w_r} = \bigg(\sum_{i\neq y_s }a_i o_i(x_s,W,a)- \sum_{i\neq y_s}a_{y_s}o_i(x_s,w)\bigg)\mathbb{I}\{w_r^\top x_s\geq 0\}x_s.
 \]
 \par
 基于以上的假设，有以下的结果：
 \begin{theorem}
 对$\forall \epsilon > 0$，存在$M = poly(k,l,1/\delta,1/\epsilon)$，使得当$m\geq M$时，当$B = poly(k,l,1/\delta,1/\epsilon,\log(m))$,$\eta = \frac{1}{m\cdot poly(k,l,1/\delta,1/\epsilon,\log m)}, T = poly(k,l,1/\delta,1/\epsilon,\log m)$时
 \[
-Pr_{x,y\sim \mathcal{D}}\big[\forall j \in [k], j\neq y, f_y(W(T),a,x)>f_j(W(T),a,x)\big]\geq 1-\epsilon
+Pr_{x,y\sim \mathcal{D}}\big[\forall j \in [k], j\neq y, f_y(W(T),a,x)>f_j(W(T),a,x)\big]\geq 1-\epsilon.
 \]
 \end{theorem}
 
@@ -92,14 +85,14 @@ Pr_{x,y\sim \mathcal{D}}\big[\forall j \in [k], j\neq y, f_y(W(T),a,x)>f_j(W(T),
 \par
 考虑平均Hinge损失函数：
 \[
-l(W,a) = \frac{1}{n}\sum_{i=1}^n \max\{1-y_if(W,a,x_i),0\}
+l(W,a) = \frac{1}{n}\sum_{i=1}^n \max\{1-y_if(W,a,x_i),0\}.
 \]
 \par
 在以上的设定下，可以对神经网络的收敛速度给出上界估计和下界估计\cite{brutzkus2017sgd}。
 \begin{theorem}[上界]
 SGD在进行至多$M_k$次非零更新后收敛到全局最优解，其中
 \[
-M_k = \frac{\|w^*\|^2}{\alpha^2}+\frac{\|w^*\|^2}{k\eta v^2\alpha^2}+\frac{\sqrt{R(8k^2\eta^2v^2+8\eta k)}\|w^*\|^{1.5}}{2k(\eta k \alpha)^{1.5}} + \frac{2R\|w^*\|}{\eta v\alpha}
+M_k = \frac{\|w^*\|^2}{\alpha^2}+\frac{\|w^*\|^2}{k\eta v^2\alpha^2}+\frac{\sqrt{R(8k^2\eta^2v^2+8\eta k)}\|w^*\|^{1.5}}{2k(\eta k \alpha)^{1.5}} + \frac{2R\|w^*\|}{\eta v\alpha}.
 \]
 \end{theorem}
 \begin{theorem}[下界]
@@ -110,18 +103,16 @@ M_k = \frac{\|w^*\|^2}{\alpha^2}+\frac{\|w^*\|^2}{k\eta v^2\alpha^2}+\frac{\sqrt
 \begin{theorem}
 设$n\geq 2c_k$，则对$S$和$W_0$，以至少概率$1-\delta$，有
 \[
-l_{\mathcal{D}}^{0-1}(SGD_k(S,W_0))\leq l_{V}^{0-1}(SGD_k(S,W_0)) + \sqrt{l_{V}^{0-1}(SGD_k(S,W_0))\frac{4c_k\log(n/\delta)}{n}} + \frac{8c_k\log(n/\delta)}{n}
+l_{\mathcal{D}}^{0-1}(SGD_k(S,W_0))\leq l_{V}^{0-1}(SGD_k(S,W_0)) + \sqrt{l_{V}^{0-1}(SGD_k(S,W_0))\frac{4c_k\log(n/\delta)}{n}} + \frac{8c_k\log(n/\delta)}{n},
 \]
-\par
 其中$S = \{(x_i,y_i)\}_{i=1}^n$，而$W_0$为权重的初始值，满足其任意一行$w_{r,0}$满足存在一个固定常数$R>0$使得$\|w_{r,0}\|\leq R$,$SGD(S,W_0)$为神经网络的输出，具体地，$SGD(S,W_0) = B_{W_0}(x_{i_1},\cdots,x_{i_{c_k}})$，其中$c_k\leq M_k$，其中$(i_1,\cdots,i_{c_k})\in [n]^{c_k}$，令$V = \{x_j:j\notin \{i_1,\cdots,i_{c_k}\}\}$
 \end{theorem}
 
 \begin{theorem}
 若$n\geq 2c_k, R = v = \frac{1}{\sqrt{2k}}$，则对$S,W_0$以至少概率$1-\delta$有SGD收敛到全局最优解，并且在分布$\mathbb{D}$上的0-1测试误差至多为
 \[
-\frac{8}{n}\big(\frac{\|w^*\|^2}{\alpha^2}+O(\frac{\|w^*\|^2}{\min\{\eta,\sqrt{\eta}\}})\big)\log(n/\delta)
+\frac{8}{n}\big(\frac{\|w^*\|^2}{\alpha^2}+O(\frac{\|w^*\|^2}{\min\{\eta,\sqrt{\eta}\}})\big)\log(n/\delta).
 \]
-
 \end{theorem}
 
 
@@ -149,6 +140,59 @@ T = \Theta(\frac{poly(n,L)}{\delta^2b}\cdot \log(1/\epsilon))
 \par
 以上的两个定理说明，GD和SGD算法在网络过参数化的情形下，训练过程收敛。即对于神经网络的优化过程，对于服从任意分布并满足假设2.2的数据，过参数化神经网络可以很好的拟合数据。
 
+\section{基于Neural Tangent Kernel(NTK)的结果}
+通常，对于一个很大的模型，其中的参数也很多，因此训练模型的难度很多，模型的精度难以保证，但是近些年研究者在研究中发现，实际上，在许多任务中表现最好的模型都是较大的模型，这与以往的研究者的认知不相符。最近有许多的研究者想要给出一个科学合理的解释。\citet{jacot2018neural}提出了Neural Tangent Kernel(NTK)，将训练神经网络和核方法（Kernel Method）联系在了一起，他们证明了当神经网络的宽度趋于无穷时，可以用NTK的极限逼近，并且NTK在训练过程中保持不变。不仅神经网络在训练过程中的表现可以用NTK逼近，神经网络在测试集上的表现也可以用NTK表示。正是因为NTK在训练过程中保持不变，对于用梯度下降算法训练的神经网络，其训练过程可以用线性微分方程表示，并且通过微分方程的解可以知道，训练误差以线性速度趋于0.下面将介绍基于NTK的理论结果。
+\par
+考虑均方误差$l(W) = \frac{1}{2}\sum_{i=1}^n (f(W,x_i)-y_i)^2$，令NTK为$H(t) = [\langle \frac{\partial f(W(t),x_i)}{\partial W},\frac{\partial f(W(t),x_j)}{\partial W} \rangle ]_{i,j}$，则有
+\begin{lemma}
+考虑学习率取为$\frac{d W(t)}{d t} = -\nabla l(W(t))$，令$u(t) = (f(W(t),x_i))_{i\in[n]}$，则有
+\[
+\frac{du(t)}{dt} = - H(t) (u(t)-y),
+\]
+若令$H^\infty = \lim_{t\rightarrow \infty} H(t)$，若$H(t) = H^\infty, \forall t$，则
+\[
+\frac{du(t)}{dt} = - H^\infty (u(t)-y).
+\]
+\end{lemma}
+\par
+对$x,x^\prime$定义
+\[
+\Sigma^{(0)}(x,x^\prime) = x^\top x^\prime,
+\]
+\[
+\Lambda^{(h)}(x,x^\prime) = \begin{bmatrix}
+							\Sigma^{(h-1)}(x,x) & \Sigma^{(h-1)}(x,x^\prime)\\
+							\Sigma^{(h-1)}(x^\prime,x) & \Sigma^{(h-1)}(x^\prime,x^\prime)\\
+							\end{bmatrix},
+\]
+\[
+\Sigma^{(h)}(x,x^\prime) = c_\sigma \mathbb{E}_{u,v\sim \mathcal{N}(0,\Lambda^{(h)})}[\sigma(u),\sigma(v)],
+\]
+\[
+\dot{\Sigma}^{(h)}(x,x^\prime) = c_\sigma \mathbb{E}_{u,v\sim \mathcal{N}(0,\Lambda^{(h)})}[\dot{\sigma}(u),\dot{\sigma}(v)],
+\]
+\[
+\Theta^{(L)}(x,x^\prime) = \sum_{h=1}^{L+1}(\Sigma^{(h-1)}(x,x^\prime)\cdot \Pi_{h^\prime = h}^{L+1}\dot{\Sigma}^{h^\prime}(x,x^\prime)),
+\]
+其中，$c_\sigma = (\mathbb{E}_{z\sim\mathcal{N}(0,1)}[\sigma(z)^2])^{-1}$,$H^\infty_{ij} = \Theta^{(L)}(x_i,x_j)$。
+\begin{theorem}
+对$\epsilon > 0$和$\delta\in(0,1)$，设$L$层神经网络中单层的最少节点数$d_h \geq \Omega(\frac{L^6}{\epsilon^4}\log(L/\delta))$，则对输入$x,x^\prime$使得$\|x\|\leq 1, \|x^\prime \| \leq 1$，以至少概率$1-\delta$有
+\[
+|\langle \frac{\partial f(W,x)}{\partial W},\frac{\partial f(W,x^\prime)}{\partial W}\rangle - \Theta^{(L)}(x,x^\prime)| \leq (L+1)\epsilon.
+\]
+\end{theorem}
+\par
+上述定理说明当网络的宽度为层数的多项式关系时，并不一定要趋于无穷时，神经网络的预测收敛到NTK。
+\par
+若令$[ker_{ntk}(x_{test},X)]_i = \Theta^{(L)}(x_{test},x_i)$，NTK在测试数据上的预测值为$f_{ntk} = ker_{ntk}(x_{test},X)^\top (H^\infty)^{-1}y$，神经网络的预测值为$f_{nn}(x_{test}) = \lim_{t\rightarrow \infty} f_{nn}(\theta(t),x_{test})$，则有以下结果成立
+\begin{theorem}
+假设每层网络的宽度都为$m\geq poly(1/\kappa,L,1/\lambda_0, n, \log(1/\delta))$，其中$1/\kappa = poly(1/\epsilon,\log(n/\delta)),\lambda_0 = \lambda_{\min}(H^\infty)$则对$x_{test}\in \mathbb{R}^d,\|x_{test}\|=1$，则至少以概率$1-\delta$有
+\[
+|f_{nn}(x_{test})-f_{ntk}(x_{test})|\leq \epsilon.
+\]
+\end{theorem}
+\par
+上面的定理说明了在网络足够宽时，神经网络和NTK预测之间存在着某种等价关系，他们的预测结果一致\cite{arora2019exact}。
 \section{其他理论结果}
 \citet{allen2019learning}考虑了三层神经网络，他们通过理论分析结果说明了神经网络在足够宽（即过参数化），训练样本数据足够多，训练次数足够多的情况下，训练误差可以以很大概率收敛到最优解，并且三层的神经网络比两层神经网络的学习能力更强，可以学习到更多的函数，对更大的函数类进行拟合。\citet{du2018gradient}考虑了多层神经网络证明了当网络足够宽，适当的选取学习率时，梯度下降算法训练损失可以以线性收敛速度收敛到0，并将结果扩展到了ResNet和CNN上。\citet{cao2019generalization}考虑了多层过参数化神经网络，在激活函数为ReLU，损失函数为0-1损失函数的情形下，给出了SGD算法的0-1测试误差的上界估计，从而理论上证明了模型的泛化能力。
 \par

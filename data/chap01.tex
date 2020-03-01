@@ -24,7 +24,7 @@
 \begin{itemize}
   \item 卷积层：卷积层是通过一个滤波器（卷积核），将滤波器覆盖输入的数据，并进行窗口移动，每次都与覆盖的数据进行元素间的相乘，并将相乘结果相加除以元素个数得到该窗口对应的输出值。具体说来，假设输入数据为$x\in \mathbb{R}^{n\times n}$, 滤波器为$f\in \mathbb{R}^{l\times l}$, 则输出$y\in \mathbb{R}^{(n-l+1)\times (n-l+1)}$，其中
   \[
-    y_{i,j} = \frac{1}{l^2}\sum_{s = j}^{j+l-1}\sum_{t = i}^{i+l-1} x_{t,s}f_{t-i+1,s-i+1}
+    y_{i,j} = \frac{1}{l^2}\sum_{s = j}^{j+l-1}\sum_{t = i}^{i+l-1} x_{t,s}f_{t-i+1,s-i+1}.
   \]
   \par
   图~\ref{fig:conv}~是上述过程的一个直观的说明图。
@@ -40,7 +40,7 @@
   \par
   池化层的输出为$y\in \mathbb{R}^{k\times k}$，其中$k = m/d$，且
   \[
-  	y_{i,j} = \frac{1}{d^2}\sum_{s=(i-1)d+1}^{id}\sum_{t=(j-1)d+1}^{jd}x_{s,t}
+  	y_{i,j} = \frac{1}{d^2}\sum_{s=(i-1)d+1}^{id}\sum_{t=(j-1)d+1}^{jd}x_{s,t}.
   \]
   \par
   图~\ref{fig:avgpool}~展示了以$2\times2$为单位进行平均池化的一个实例。
@@ -53,3 +53,10 @@
   \par
   池化层的重要意义在于，它可以将数据进行降维，图像数据往往维度都很大，计算量很大，而进行降维可以大大降低计算量。另一方面，由于池化具有平移不变性，当输入数据受到微小扰动时，池化层的输出也会保持不变，神经网络的鲁棒性(Robustness)增强了。
 \end{itemize}
+
+
+
+\section{本文主要记号}
+这一部分我们将简要介绍本文使用到的主要记号及其含义。
+\par
+我们用$x_i$表示输入的第$i$个数据，$X = (x_i)_i$表示组成的矩阵，$y_i$表示$x_i$对应的输入值/标签，$n$表示输入数据的个数，$\mathcal{D}$表示输入数据服从的概率分布。我们用$w,a$表示网络中的权重参数，$m$表示网络的宽度，$f(\cdot)$表示模型的预测值，$l(\cdot)$表示损失函数，$L$表示网络的层数，$\eta$表示学习率。$\mathbb{I}$表示示性函数，$\mathbb{E}$是数学期望的符号，$\mathbb{P}$和$P$表示概率测度，$\sigma(\cdot)$表示激活函数，$\|\cdot\|$表示范数，$\mathcal{N}(\mu,\Sigma^\top \Sigma)$表示均值为$\mu$，方差为$\Sigma^\top\Sigma$的正态分布。我们用$O(\cdot),\Theta(\cdot)$和$\Omega(\cdot)$分别表示最差、近似和最好的复杂度情况，$\tilde{O}$表示舍去复杂度中的$\log$项后的复杂度。我们用$\lesssim$表示舍去常数下的$<$。$[n]$表示$\{1,2,\cdots,n\}$，$poly(\cdot)$表示多项式函数。
