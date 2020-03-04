@@ -106,7 +106,7 @@ I_1^i &= -\frac{\eta}{m}\sum_{j=1}^n x_i^\top x_j (u_j-y_j)\sum_{r\in S_i}\mbi\{
 \begin{lemma}
 对于参数集$\Theta$，我们有
 \begin{equation}\label{eq:l4}
-\sup_{\hat{\theta}\in \Theta} \sum_{i=1}^n \varepsilon_i\langle z_i,\hat{\theta}-\theta\rangle \leq \|\hat{theta} - \theta \|_x \sup_{\phi \in \Theta_x} \sum_{i=1}^n \varepsilon_i\langle z_i,\phi\rangle
+\sup_{\hat{\theta}\in \Theta} \sum_{i=1}^n \varepsilon_i\langle z_i,\hat{\theta}-\theta\rangle \leq \|\hat{\theta} - \theta \|_x \sup_{\phi \in \Theta_x} \sum_{i=1}^n \varepsilon_i\langle z_i,\phi\rangle
 \end{equation}
 
 \end{lemma}
@@ -209,7 +209,7 @@ I_1^i &= -\frac{\eta}{m}\sum_{j=1}^n x_i^\top x_j (u_j-y_j)\sum_{r\in S_i}\mbi\{
 \begin{proof}
 为了证明下界，这里先引入以下引理
 \begin{lemma}[\citet{tsybakov2008introduction}]
-设$\Theta_M = (\theta_0, \theta_1, \cdots, \theta_M)$是一个有限参数集，设$P_j$为$\theta_j, j\ in \{0,1,\cdots, M\}$对应的概率分布测度。设$\mathfrak{d}:\Theta_M\times \Theta_M\rightarrow \mathbb{R}^+$定义了$\Theta_M$与$\Theta_M$乘积空间上的一个半距离，并且具有以下的性质：
+设$\Theta_M = (\theta_0, \theta_1, \cdots, \theta_M)$是一个有限参数集，设$P_j$为$\theta_j, j\in \{0,1,\cdots, M\}$对应的概率分布测度。设$\mathfrak{d}:\Theta_M\times \Theta_M\rightarrow \mathbb{R}^+$定义了$\Theta_M$与$\Theta_M$乘积空间上的一个半距离，并且具有以下的性质：
 \begin{enumerate}
 \item $\mathfrak{d}(\theta_j,\theta_k)\geq 2\rho > 0, \forall j,k\in\{0,1,\cdots,M\}$;
 \item $P_j \ll P_0, \forall j \in \{1,\cdots, M\}$;

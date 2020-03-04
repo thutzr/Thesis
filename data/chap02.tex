@@ -13,7 +13,8 @@
   \item SGD算法收敛到最优解的速度是怎么样的。
   \item SGD算法可以拟合训练数据，收敛到可以拟合输入数据之间对应关系的最优解，但是该最优解对与输入数据独立同分布取样的数据是否可以拟合，效果如何，即，最优解的泛化能力如何。
 \end{enumerate}
-
+\par
+对于两层神经网络，\citet{du2018gradient}基于Gram Matrix分析证明了过参数化神经网络的训练过程以线性速度收敛到0；\citet{li2018learning}证明当数据满足一定的分离性假设时，SGD算法在过参数化网络中可以收敛到泛化能力较好的解，并且网络的宽度与数据量无关，收敛的迭代次数与网络宽度的对数成多项式关系；\citet{brutzkus2017sgd}也得到了与数据量无关的结果，他们给出了SGD算法收敛的迭代次数的足够紧的上界和下界。对于多层神经网络，\citet{allen2018convergence}证明了当网络宽度和数据量以及网络层数成多项式关系时，SGD算法在与数据量和网络层数成多项式关系的迭代次数内收敛；\citet{jacot2018neural}引入了Nerual Tangent Kernel的概念，证明了当网络宽度趋于无穷时，找到了神经网络训练和Kernel Method之间的关系；\citet{arora2019exact}基于Nerual Tangent Kernel证明了神经网络训练的结果和NTK Regression的结果之间的等价性。
 
 \section{两层神经网络}
 \citet{du2018gradient}考虑了一个两层的神经网络，使用了ReLU激活函数，并考虑的是二次损失函数(quadratic loss)。
